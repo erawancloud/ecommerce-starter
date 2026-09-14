@@ -1,0 +1,50 @@
+# A Thai shop: Medusa 2 behind a themed storefront, on one hostname.
+#
+# **Two components, and the storefront is the public one.** An Erawan release
+# has exactly one public component, and a component that wants a hostname of
+# its own has to write a literal name into this file — which claims it in the
+# platform's flat, first-come namespace, so the *second* customer to deploy
+# this template would be refused. The storefront therefore carries the app's
+# address and proxies /app, /admin, /auth and /static back to Medusa over the
+# cluster network (storefront/src/lib/proxy.ts). The backend has no ingress at
+# all, which is also why its Store API is not on the internet by accident.
+#
+# **Order matters here.** Components are deployed in the order they are written,
+# and the backend runs the migrations and the first seed. The storefront asks it
+# for the publishable key on its first request, so the backend goes first.
+version: 1
+addons: [postgres]
+components:
+  backend:
+    path: backend
+    port: 9000
+    # Product photos, and the transfer slips customers send in. Without a disk
+    # every photo the owner uploads is erased by the next deploy.
+    disk: true
+    addons: [postgres]
+    # Medusa's own, and it answers only once the server can serve.
+    healthcheck: /health
+    # Declared and never carried: the deploy stops until the owner sets each
+    # one on the app's own page (PRODUCT.md §65), so no secret passes through
+    # an agent. BOOTSTRAP_SECRET must be the same value on both components —
+    # it is what the storefront presents to read the publishable key.
+    secrets: [JWT_SECRET, COOKIE_SECRET, BOOTSTRAP_SECRET, ADMIN_PASSWORD]
+    # Measured on 2026-09-14: 263MiB idle after migrating, seeding and serving.
+    # The limit is headroom for a catalogue import and the admin's own queries,
+    # not a reservation — the request is what the account is charged against.
+    resources:
+      requests: {memory: 384Mi, cpu: 250m}
+      limits:   {memory: 1024Mi, cpu: 1000m}
+  web:
+    path: storefront
+    port: 8000
+    public: true
+    # A real route handler, not a path the app happens to answer.
+    healthcheck: /healthz
+    secrets: [BOOTSTRAP_SECRET]
+    # Measured on 2026-09-14: 140MiB idle. Next keeps a rendered-page cache in
+    # this process, so the ceiling is what a busy catalogue needs rather than
+    # what an idle one uses.
+    resources:
+      requests: {memory: 256Mi, cpu: 250m}
+      limits:   {memory: 640Mi, cpu: 1000m}

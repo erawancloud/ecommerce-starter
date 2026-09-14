@@ -1,0 +1,143 @@
+/*
+ * The brand, and the three themes.
+ *
+ * **Unlayered on purpose.** `@medusajs/ui-preset` defines every `--bg-*`,
+ * `--fg-*` and `--button-*` variable inside Tailwind's `base` layer, and an
+ * unlayered declaration beats a layered one whatever its specificity (the rule
+ * CLAUDE.md records for Basecoat). So this file, imported after the Tailwind
+ * imports in globals.css, is what the shop's own colours arrive through — and
+ * because the whole starter paints from those variables, changing six hex
+ * values in the admin repaints every button, border, price and panel in it.
+ *
+ * The *values* are not here: they are written into a `<style>` element by
+ * app/layout.tsx from the store's own record, at request time, so that saving
+ * in the admin changes the shop without a build. This file only says what each
+ * brand colour means to the component library, and what each theme does with
+ * type, weight and rhythm.
+ *
+ * **Corner radius is the owner's, not the theme's.** A theme block here is
+ * `html[data-theme="…"]` — a type selector plus an attribute, which outranks
+ * the `:root` the inline style would otherwise use, so a theme that declared
+ * `--brand-radius` would quietly beat the value the owner chose. Themes
+ * therefore do not declare it; the admin page pre-fills a recommendation when
+ * the theme is switched, and what is *stored* is what renders. (The inline
+ * style is written as `:root:root` anyway, so the next variable somebody adds
+ * to a theme block cannot repeat this.)
+ */
+
+:root {
+  /* Defaults, so a page renders correctly if the brand fetch failed and the
+     inline <style> is absent. Kept equal to DEFAULT_BRAND in brand-contract.ts. */
+  --brand-primary: #b4472a;
+  --brand-on-primary: #ffffff;
+  --brand-accent: #c9a227;
+  --brand-ink: #1c1917;
+  --brand-paper: #fbf8f3;
+  --brand-muted: #6b6259;
+
+  --brand-radius: 6px;
+  --brand-radius-lg: 10px;
+  --brand-heading-family: var(--font-latin), var(--font-thai), sans-serif;
+  --brand-heading-weight: 600;
+  --brand-heading-spacing: -0.01em;
+  --brand-heading-transform: none;
+  --brand-card-border: 1px solid color-mix(in srgb, var(--brand-ink) 12%, transparent);
+  --brand-card-surface: color-mix(in srgb, var(--brand-paper) 92%, #ffffff);
+  --brand-section-space: 3.5rem;
+
+  /* --- what the component library reads ------------------------------- */
+  --bg-base: var(--brand-paper);
+  --bg-subtle: color-mix(in srgb, var(--brand-paper) 88%, var(--brand-ink));
+  --bg-component: var(--brand-card-surface);
+  --bg-field: color-mix(in srgb, var(--brand-paper) 96%, #ffffff);
+
+  --fg-base: var(--brand-ink);
+  --fg-subtle: color-mix(in srgb, var(--brand-ink) 78%, var(--brand-paper));
+  --fg-muted: var(--brand-muted);
+  --fg-on-color: var(--brand-on-primary);
+  --fg-on-inverted: var(--brand-on-primary);
+  --fg-interactive: var(--brand-primary);
+  --fg-interactive-hover: color-mix(in srgb, var(--brand-primary) 80%, black);
+
+  --border-base: color-mix(in srgb, var(--brand-ink) 14%, transparent);
+  --border-strong: color-mix(in srgb, var(--brand-ink) 28%, transparent);
+  --border-interactive: var(--brand-primary);
+
+  /* Medusa UI's "primary" button is the inverted one. */
+  --button-inverted: var(--brand-primary);
+  --button-inverted-hover: color-mix(in srgb, var(--brand-primary) 88%, black);
+  --button-inverted-pressed: color-mix(in srgb, var(--brand-primary) 76%, black);
+  --bg-interactive: var(--brand-primary);
+}
+
+body {
+  background-color: var(--brand-paper);
+  color: var(--brand-ink);
+  /* Thai first: a Latin face with no Thai glyphs renders ก–ฮ as boxes, and the
+     shop's own language must not depend on the brand's font choice. */
+  font-family: var(--font-thai), var(--font-latin), system-ui, sans-serif;
+}
+
+h1, h2, h3, .brand-heading {
+  font-family: var(--brand-heading-family);
+  font-weight: var(--brand-heading-weight);
+  letter-spacing: var(--brand-heading-spacing);
+  text-transform: var(--brand-heading-transform);
+}
+
+/* One accent, used for the things that are *new* or *cheaper* — a price that
+   dropped, a badge. Kept to a class rather than a global so it stays rare. */
+.brand-accent { color: var(--brand-accent); }
+.brand-accent-bg { background-color: var(--brand-accent); color: var(--brand-ink); }
+
+/* --- ธีม / themes ------------------------------------------------------
+ *
+ * Each theme is type, shape and density — not a different codebase. Anything
+ * that needed its own component tree would be a second storefront to keep
+ * working, which is the bill PRODUCT.md §13 refused for other people's
+ * software and the one this template would be paying every Medusa release.
+ */
+
+/* สยาม — warm, a serif headline, generous corners. Craft, ของฝาก, food. */
+html[data-theme="siam"] {
+  --brand-heading-family: var(--font-serif), var(--font-thai), serif;
+  --brand-heading-weight: 500;
+  --brand-heading-spacing: 0;
+  --brand-section-space: 4rem;
+}
+
+/* ตลาด — dense and loud. Everything closer together, prices heavier. */
+html[data-theme="market"] {
+  --brand-heading-family: var(--font-latin), var(--font-thai), sans-serif;
+  --brand-heading-weight: 700;
+  --brand-heading-spacing: -0.02em;
+  --brand-section-space: 2.25rem;
+  --brand-card-surface: #ffffff;
+}
+html[data-theme="market"] .brand-price {
+  font-weight: 700;
+  font-size: 1.05em;
+}
+
+/* สตูดิโอ — airy, quiet, wide letter-spacing. Fashion, jewellery, ceramics. */
+html[data-theme="studio"] {
+  --brand-heading-family: var(--font-display), var(--font-thai), sans-serif;
+  --brand-heading-weight: 500;
+  --brand-heading-spacing: 0.08em;
+  --brand-heading-transform: uppercase;
+  --brand-section-space: 5.5rem;
+  --brand-card-border: 1px solid color-mix(in srgb, var(--brand-ink) 8%, transparent);
+  --brand-card-surface: transparent;
+}
+
+/* Shape, applied where the starter already draws a surface. */
+.brand-card {
+  border: var(--brand-card-border);
+  background: var(--brand-card-surface);
+  border-radius: var(--brand-radius-lg);
+}
+.brand-section { padding-block: var(--brand-section-space); }
+
+button, .btn, input, select, textarea {
+  border-radius: var(--brand-radius);
+}

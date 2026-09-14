@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" role="img" aria-label="ผ้าขาวม้า">
+  <rect width="800" height="1000" fill="#EAF0EC"/>
+  <g fill="none" stroke="#2F6B4F" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M230 320h340v420H230z"/>
+    <path d="M230 430h340M230 540h340M230 650h340"/>
+    <path d="M330 320v420M450 320v420"/>
+  </g>
+  <text x="400" y="930" text-anchor="middle" font-family="system-ui, sans-serif" font-size="34" fill="#2F6B4F">ผ้าขาวม้า</text>
+</svg>

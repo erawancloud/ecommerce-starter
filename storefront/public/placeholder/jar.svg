@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" role="img" aria-label="น้ำพริกเผา">
+  <rect width="800" height="1000" fill="#F6EAE4"/>
+  <g fill="none" stroke="#9B3B25" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M300 300h200v60H300z"/>
+    <path d="M280 360h240v330a60 60 0 0 1-60 60H340a60 60 0 0 1-60-60z"/>
+    <path d="M330 470h140M330 550h140"/>
+  </g>
+  <text x="400" y="930" text-anchor="middle" font-family="system-ui, sans-serif" font-size="34" fill="#9B3B25">น้ำพริกเผา</text>
+</svg>

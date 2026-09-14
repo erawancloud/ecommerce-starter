@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" role="img" aria-label="สบู่สมุนไพร">
+  <rect width="800" height="1000" fill="#F3EFE2"/>
+  <g fill="none" stroke="#6C7A3A" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="230" y="430" width="200" height="130" rx="24"/>
+    <rect x="330" y="520" width="200" height="130" rx="24"/>
+    <rect x="430" y="380" width="150" height="110" rx="22"/>
+  </g>
+  <text x="400" y="930" text-anchor="middle" font-family="system-ui, sans-serif" font-size="34" fill="#6C7A3A">สบู่สมุนไพร</text>
+</svg>
