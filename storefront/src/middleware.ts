@@ -158,9 +158,17 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // No `app|admin|auth|static` exclusion any more: those are the backend's
-    // own hostname now (`subdomain: auto`), not paths on this one, so there is
-    // nothing here to step around.
-    "/((?!api|_next/static|_next/image|favicon.ico|images|assets|placeholder|png|svg|jpg|jpeg|gif|webp).*)",
+    // **`healthz` is excluded and that is not tidiness — it is the readiness
+    // probe.** This middleware redirects any path with no country code to
+    // `/th/…`, so `/healthz` answered a redirect instead of 200 and Kubernetes
+    // never called the component ready: the release failed with "Deployment
+    // not ready after 600s" while the container's own log said `Ready in
+    // 768ms`, which is a failure that reads as a slow app and is not one
+    // (walked on production, 2026-09-15).
+    //
+    // `app|admin|auth|static` used to be here too and are not any more: those
+    // are the backend's own hostname since `subdomain: auto`, not paths on
+    // this one.
+    "/((?!api|healthz|_next/static|_next/image|favicon.ico|images|assets|placeholder|png|svg|jpg|jpeg|gif|webp).*)",
   ],
 }
