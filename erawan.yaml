@@ -1,13 +1,17 @@
 # A Thai shop: Medusa 2 behind a themed storefront, on one hostname.
 #
-# **Two components, and the storefront is the public one.** An Erawan release
-# has exactly one public component, and a component that wants a hostname of
-# its own has to write a literal name into this file — which claims it in the
-# platform's flat, first-come namespace, so the *second* customer to deploy
-# this template would be refused. The storefront therefore carries the app's
-# address and proxies /app, /admin, /auth and /static back to Medusa over the
-# cluster network (storefront/src/lib/proxy.ts). The backend has no ingress at
-# all, which is also why its Store API is not on the internet by accident.
+# **Two components, two addresses, which is how Medusa is meant to run.** The
+# storefront answers on the app's own address and the backend on
+# `{app}-backend.erawan.app` — `subdomain: auto`, derived rather than written
+# out, so it cannot collide with another account's (ISSUES #283).
+#
+# The first version of this file had one address and proxied /app, /admin,
+# /auth and /static from the storefront to a backend with no ingress, because
+# a literal subdomain would have made the template deployable exactly once.
+# That bent Medusa around a gap in the platform instead of closing it: Medusa
+# serves its Store API, its Admin API, its sign-in and its dashboard from one
+# host and the shop from another, and every piece of its own documentation
+# assumes that.
 #
 # **Order matters here.** Components are deployed in the order they are written,
 # and the backend runs the migrations and the first seed. The storefront asks it
@@ -18,6 +22,10 @@ components:
   backend:
     path: backend
     port: 9000
+    # `{app}-backend.erawan.app`: the Store API, the Admin API, /auth, the
+    # admin dashboard at /app and uploaded photos at /static — which is the
+    # split every Medusa deployment has.
+    subdomain: auto
     # Product photos, and the transfer slips customers send in. Without a disk
     # every photo the owner uploads is erased by the next deploy.
     disk: true

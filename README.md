@@ -41,6 +41,7 @@ erawan secrets set $NAME ADMIN_PASSWORD="$(openssl rand -base64 18)"
 
 erawan deploy --app medusa --name $NAME \
   --env STORE_URL=https://$NAME.erawan.app \
+  --env ADMIN_URL=https://$NAME-backend.erawan.app \
   --env ADMIN_EMAIL=you@example.com
 ```
 
@@ -65,35 +66,39 @@ deterministic เท่ากับ `--app medusa` — และ tag ที่�
 | ที่อยู่ | คืออะไร |
 |---|---|
 | `https://NAME.erawan.app` | หน้าร้าน ลูกค้าเข้าที่นี่ |
-| `https://NAME.erawan.app/app` | หลังร้าน (Medusa Admin) เข้าด้วย `ADMIN_EMAIL` + `ADMIN_PASSWORD` |
-| `https://NAME.erawan.app/app` → **แบรนด์และธีม** | สี โลโก้ ฟอนต์ ธีม พร้อมเพย์ โซเชียล SEO แท็กการตลาด |
+| `https://NAME-backend.erawan.app/app` | หลังร้าน (Medusa Admin) เข้าด้วย `ADMIN_EMAIL` + `ADMIN_PASSWORD` |
+| `https://NAME-backend.erawan.app/app` → **แบรนด์และธีม** | สี โลโก้ ฟอนต์ ธีม พร้อมเพย์ โซเชียล SEO แท็กการตลาด |
 
 **`ADMIN_PASSWORD` ต้องยาวอย่างน้อย 8 ตัว** — Medusa ปฏิเสธที่สั้นกว่านั้น และ
 ข้อความที่ได้จะอยู่ในล็อกของ container ไม่ใช่ที่หน้าจอที่คุณกดขึ้นระบบ.
 
-## หนึ่งชื่อ สองส่วน / One hostname, two components
+## สองชื่อ สองส่วน / Two hostnames, two components
 
-Erawan อนุญาตให้หนึ่ง release มี component สาธารณะได้ **ชิ้นเดียว** และ component
-ที่อยากมีชื่อของตัวเองต้องเขียนชื่อจริงลงใน `erawan.yaml` ซึ่งจองชื่อนั้นทั้งแพลตฟอร์ม
-— แปลว่าลูกค้าคนที่สองที่กดขึ้นระบบ template นี้จะถูกปฏิเสธ. ฉะนั้น:
+แบบเดียวกับที่ Medusa รันทุกที่: backend หนึ่งโฮสต์ หน้าร้านอีกโฮสต์
 
 ```
-                    https://NAME.erawan.app
-                              │
-                    ┌─────────▼─────────┐
-                    │  web (storefront) │  Next.js, public
-                    │  /  /th  /store   │
-                    └─────────┬─────────┘
-        /app /admin /auth /static │  proxied at run time
-                    ┌─────────▼─────────┐
-                    │      backend      │  Medusa 2, no ingress
-                    │  + postgres addon │  + disk at /data
-                    └───────────────────┘
+   https://NAME.erawan.app              https://NAME-backend.erawan.app
+             │                                        │
+   ┌─────────▼─────────┐                    ┌─────────▼─────────┐
+   │  web (storefront) │                    │      backend      │
+   │  Next.js          │───── in-cluster ──▶│  /store  /admin   │
+   │  public: true     │   ERAWAN_COMPONENT │  /auth   /app     │
+   └───────────────────┘   _BACKEND_URL     │  /static          │
+                                            │  + postgres, disk │
+                                            └───────────────────┘
 ```
 
-หน้าร้านทำ proxy สี่เส้นทางกลับไปที่ backend ผ่านเครือข่ายภายในคลัสเตอร์
-(`storefront/src/lib/proxy.ts`) ผลพลอยได้คือ **Store API ของร้านไม่ได้เปิดออก
-อินเทอร์เน็ตโดยบังเอิญ** เพราะ backend ไม่มี ingress เลย.
+`subdomain: auto` คือสิ่งที่ทำให้ backend มีชื่อของตัวเองได้ — ชื่อถูก derive มาจาก
+`{app}-{component}` ไม่ได้เขียนตายตัว ฉะนั้นชนกับบัญชีอื่นไม่ได้ (ISSUES #283).
+
+**เวอร์ชันแรกของ template นี้มีโฮสต์เดียว** แล้วให้หน้าร้าน proxy `/app` `/admin`
+`/auth` `/static` กลับไปหา backend ที่ไม่มี ingress — เพราะตอนนั้นเขียนชื่อตายตัวได้
+อย่างเดียว และ template ที่เขียนชื่อตายตัวจะขึ้นระบบได้ครั้งเดียวในโลก. นั่นคือการ
+**ดัด Medusa ให้เข้ากับช่องว่างของแพลตฟอร์ม** แทนที่จะปิดช่องว่างนั้น — proxy ถูกลบ
+ทิ้งทั้งก้อนเมื่อ `subdomain: auto` มีแล้ว.
+
+หน้าร้านยังคุยกับ backend ผ่านเครือข่ายภายในคลัสเตอร์ (`ERAWAN_COMPONENT_BACKEND_URL`)
+ไม่ได้วิ่งออกไปทางโฮสต์สาธารณะ.
 
 ## รับเงินยังไง / How the shop is paid
 

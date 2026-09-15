@@ -8,16 +8,18 @@
  * needs `remotePatterns` — a list that would otherwise have to know the app's
  * hostname at build time, which is not knowable when the image is built.
  *
- * **There are no `rewrites()` here, and that is the second version of this
- * file.** The first one proxied /app, /admin, /auth and /static to the backend
- * from here, and it shipped a shop whose admin dashboard answered 500: with
- * `output: "standalone"`, next.config.js is evaluated at *build* time and its
- * rewrite table is frozen into the build manifest, so the address baked in was
- * the `http://localhost:9000` fallback rather than the sibling Service the
- * platform names at run time. The same mistake CLAUDE.md records under "if it
- * was stored when it was created, do not work it out again", facing the other
- * way. The proxy is a route handler now — src/app/(proxy) — which resolves the
- * address per request.
+ * **There are no `rewrites()` here, and there is no proxy either — that is the
+ * third version of this file.** The first proxied /app, /admin, /auth and
+ * /static to the backend with `rewrites()`, and shipped an admin that answered
+ * 500: `output: "standalone"` freezes next.config.js into the build, so the
+ * address baked in was the localhost fallback rather than the sibling Service
+ * the platform names at run time. The second moved it to a route handler,
+ * resolved per request, which worked.
+ *
+ * The third deletes it. The backend has a hostname of its own now
+ * (`subdomain: auto` in erawan.yaml), which is how Medusa runs everywhere, so
+ * this process serves the shop and nothing else. The proxy only ever existed
+ * because the platform could give a template one address.
  */
 const nextConfig = {
   output: "standalone",

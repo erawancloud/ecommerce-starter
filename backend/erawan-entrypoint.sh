@@ -26,6 +26,11 @@ require COOKIE_SECRET     "erawan secrets set <app> COOKIE_SECRET"
 require BOOTSTRAP_SECRET  "erawan secrets set <app> BOOTSTRAP_SECRET"
 require DATABASE_URL      "Add the Postgres add-on: erawan addon add <app> postgres"
 require STORE_URL         "erawan env set <app> STORE_URL=https://<app>.erawan.app"
+# This server's own address, which is a different host from the shop's since
+# the backend got `subdomain: auto`. Uploaded photos are served from it and
+# `LocalFileService` builds their URLs with `new URL()`, so a missing value is
+# a 500 on the owner's first upload rather than anything readable here.
+require ADMIN_URL         "erawan env set <app> ADMIN_URL=https://<app>-backend.erawan.app"
 
 # Product photos and anything else uploaded. DATA_DIR is Erawan's disk; without
 # it every photo the owner uploads is erased by the next deploy.

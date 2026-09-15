@@ -3,17 +3,22 @@ import { defineConfig, loadEnv } from "@medusajs/framework/utils"
 loadEnv(process.env.NODE_ENV || "production", process.cwd())
 
 /**
- * The one public origin this shop answers on.
+ * Two origins, which is how Medusa runs everywhere.
  *
- * On Erawan the storefront is the only component with an ingress, and it
- * proxies `/app`, `/admin`, `/auth`, `/store` and `/static` back here over the
- * cluster network. So the admin dashboard, the Store API and this server are
- * all the *same origin* to a browser — which is why `admin.backendUrl` is left
- * unset below (the bundler defaults it to "", meaning same origin) and why
- * CORS is a formality rather than the thing holding checkout together.
+ * `ADMIN_URL` is this server: the Store API, the Admin API, `/auth`, the admin
+ * dashboard at `/app` and uploaded photos at `/static`. `STORE_URL` is the
+ * shop customers see. The admin is served from this origin and talks to this
+ * origin, so `admin.backendUrl` stays unset — the bundler defaults it to "",
+ * meaning same origin, which is now literally true.
+ *
+ * The storefront reaches this server over the cluster network rather than
+ * through either hostname (`ERAWAN_COMPONENT_BACKEND_URL`), so `storeCors`
+ * matters only for a browser calling the Store API directly — a LIFF page, a
+ * mobile app — which is a thing a shop may want and costs nothing to allow.
  */
 const storeUrl = (process.env.STORE_URL || "").replace(/\/+$/, "")
-const cors = [storeUrl, process.env.EXTRA_CORS, "http://localhost:8000"]
+const adminUrl = (process.env.ADMIN_URL || "").replace(/\/+$/, "")
+const cors = [storeUrl, adminUrl, process.env.EXTRA_CORS, "http://localhost:8000"]
   .filter(Boolean)
   .join(",")
 
@@ -76,16 +81,16 @@ module.exports = defineConfig({
               // every upload's URL with `new URL(backend_url + …)`, so a
               // relative "/static" throws `Invalid URL` from inside the file
               // module and surfaces as a 500 on the upload with nothing in the
-              // message about a path. That was tried first and is why
-              // STORE_URL is required by erawan-entrypoint.sh rather than
+              // message about a path. That was tried first, and is why
+              // ADMIN_URL is required by erawan-entrypoint.sh rather than
               // defaulted.
               //
-              // It still resolves to the *storefront's* origin — the shop's
-              // one public hostname — which proxies /static back here. So the
-              // photo is same-origin to the browser and to the admin, and
-              // `images.unoptimized` means Next needs no `remotePatterns`
-              // entry naming a hostname that is not knowable at build time.
-              backend_url: `${storeUrl}/static`,
+              // This server's own origin: the admin uploads a photo and reads
+              // it back from the same host, and the storefront shows it from
+              // another. `images.unoptimized` in the storefront is what keeps
+              // that from needing a `remotePatterns` entry naming a hostname
+              // nothing knows at build time.
+              backend_url: `${adminUrl}/static`,
             },
           },
         ],

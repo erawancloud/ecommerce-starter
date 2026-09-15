@@ -158,11 +158,9 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // `app`, `admin`, `auth` and `static` are the paths next.config.js proxies
-    // to the Medusa backend — the admin dashboard, its API, its sign-in and
-    // the photos the owner uploaded. Middleware runs *before* rewrites, so
-    // leaving them in would send an admin login to /th/auth and the dashboard
-    // would answer 404 with nothing saying why.
-    "/((?!api|app|admin|auth|static|_next/static|_next/image|favicon.ico|images|assets|placeholder|png|svg|jpg|jpeg|gif|webp).*)",
+    // No `app|admin|auth|static` exclusion any more: those are the backend's
+    // own hostname now (`subdomain: auto`), not paths on this one, so there is
+    // nothing here to step around.
+    "/((?!api|_next/static|_next/image|favicon.ico|images|assets|placeholder|png|svg|jpg|jpeg|gif|webp).*)",
   ],
 }
