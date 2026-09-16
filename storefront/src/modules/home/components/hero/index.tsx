@@ -1,4 +1,5 @@
 import { Button, Heading } from "@medusajs/ui"
+import Image from "next/image"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { getBrand } from "@lib/brand"
 
@@ -15,6 +16,9 @@ const Hero = async () => {
   const brand = await getBrand()
   const name = brand.shop_name.th || brand.shop_name.en
   const tagline = brand.tagline.th || brand.tagline.en
+  // A real, named demo gets real art direction. A merchant who changes the
+  // sample shop's name never inherits somebody else's pantry photograph.
+  const isKruaKhunYaiDemo = name.trim() === "ครัวคุณยาย"
 
   const cta = (
     <LocalizedClientLink href="/store">
@@ -57,15 +61,37 @@ const Hero = async () => {
   }
 
   // สยาม: a warm band in the brand's own colour, the tagline given room.
+  // The named demo adds an editorial still life; ordinary shops remain a
+  // neutral canvas until their owner chooses their own content.
   return (
     <div
-      className="w-full border-b border-ui-border-base"
+      className="relative isolate w-full overflow-hidden border-b border-ui-border-base"
       style={{
         background:
           "linear-gradient(180deg, color-mix(in srgb, var(--brand-primary) 12%, var(--brand-paper)) 0%, var(--brand-paper) 100%)",
       }}
     >
-      <div className="content-container flex flex-col items-start gap-6 py-20 small:py-28">
+      {isKruaKhunYaiDemo && (
+        <>
+          <Image
+            src="/demo/krua-khunyai/hero-pantry.webp"
+            alt="ผลิตภัณฑ์จากครัวคุณยายบนโต๊ะไม้ในแสงแดดอ่อน"
+            fill
+            priority
+            sizes="100vw"
+            className="z-0 object-cover object-[68%_center]"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 z-10"
+            style={{
+              background:
+                "linear-gradient(90deg, var(--brand-paper) 0%, color-mix(in srgb, var(--brand-paper) 94%, transparent) 32%, color-mix(in srgb, var(--brand-paper) 50%, transparent) 56%, transparent 76%)",
+            }}
+          />
+        </>
+      )}
+      <div className="content-container relative z-20 flex flex-col items-start gap-6 py-20 small:py-28">
         <span
           className="brand-accent-bg rounded-full px-3 py-1 text-xs"
           style={{ borderRadius: "var(--brand-radius)" }}

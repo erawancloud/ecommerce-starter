@@ -252,9 +252,9 @@ export default async function seed({ container }: ExecArgs) {
     shipping_profile_id: shippingProfile.id,
     category_ids: [category(categoryName)],
     collection_id: featured,
-    // Served by the storefront out of its own `public/`, so the demo has
-    // pictures before anybody has uploaded one. They are SVG on purpose: two
-    // kilobytes each, and nothing here has to be photographed to ship.
+    // Served by the storefront out of its own `public/`, so the demo begins
+    // with an art-directed sample shelf before an owner has uploaded photos.
+    // These are small local WebPs, never a third-party image host.
     images: [{ url: image }],
     thumbnail: image,
     options: [{ title: "แบบ", values: ["มาตรฐาน"] }],
@@ -276,7 +276,7 @@ export default async function seed({ container }: ExecArgs) {
           "กาแฟดริปคั่วกลาง 200 กรัม",
           "drip-coffee-200g",
           "เมล็ดอาราบิก้าจากดอยช้าง คั่วกลาง บดสดทุกสัปดาห์ ชงง่ายด้วยดริปเปอร์ที่บ้าน",
-          "/placeholder/coffee.svg",
+          "/demo/krua-khunyai/coffee.webp",
           "สินค้าขายดี",
           320,
           "COFFEE-200"
@@ -285,7 +285,7 @@ export default async function seed({ container }: ExecArgs) {
           "น้ำพริกเผาสูตรคุณยาย",
           "chilli-paste",
           "สูตรดั้งเดิม ไม่ใส่วัตถุกันเสีย ขวดแก้ว 200 กรัม ส่งได้ทั่วประเทศ",
-          "/placeholder/jar.svg",
+          "/demo/krua-khunyai/chilli-paste.webp",
           "ของฝาก",
           150,
           "CHILLI-200"
@@ -294,7 +294,7 @@ export default async function seed({ container }: ExecArgs) {
           "ผ้าขาวม้าทอมือ",
           "handwoven-cloth",
           "ทอมือจากฝ้ายแท้ ลายดั้งเดิม ขนาด 90 x 180 ซม. ซักได้ ยิ่งใช้ยิ่งนุ่ม",
-          "/placeholder/cloth.svg",
+          "/demo/krua-khunyai/pha-khao-ma.webp",
           "ของฝาก",
           450,
           "CLOTH-01"
@@ -303,7 +303,7 @@ export default async function seed({ container }: ExecArgs) {
           "สบู่สมุนไพร 3 ก้อน",
           "herbal-soap-3",
           "ขมิ้นชัน ว่านหางจระเข้ และมะขาม ก้อนละ 100 กรัม ทำมือทีละรอบเล็ก",
-          "/placeholder/soap.svg",
+          "/demo/krua-khunyai/herbal-soap.webp",
           "ของใช้ในบ้าน",
           199,
           "SOAP-3"
