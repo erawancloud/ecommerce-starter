@@ -14,11 +14,11 @@ type ProductTabsProps = {
 const ProductTabs = ({ product }: ProductTabsProps) => {
   const tabs = [
     {
-      label: "Product Information",
+      label: "รายละเอียดสินค้า",
       component: <ProductInfoTab product={product} />,
     },
     {
-      label: "Shipping & Returns",
+      label: "การจัดส่งและคืนสินค้า",
       component: <ShippingInfoTab />,
     },
   ]
@@ -47,25 +47,25 @@ const ProductInfoTab = ({ product }: ProductTabsProps) => {
       <div className="grid grid-cols-2 gap-x-8">
         <div className="flex flex-col gap-y-4">
           <div>
-            <span className="font-semibold">Material</span>
+            <span className="font-semibold">วัสดุ / ส่วนประกอบ</span>
             <p>{product.material ? product.material : "-"}</p>
           </div>
           <div>
-            <span className="font-semibold">Country of origin</span>
+            <span className="font-semibold">แหล่งผลิต</span>
             <p>{product.origin_country ? product.origin_country : "-"}</p>
           </div>
           <div>
-            <span className="font-semibold">Type</span>
+            <span className="font-semibold">ประเภท</span>
             <p>{product.type ? product.type.value : "-"}</p>
           </div>
         </div>
         <div className="flex flex-col gap-y-4">
           <div>
-            <span className="font-semibold">Weight</span>
+            <span className="font-semibold">น้ำหนัก</span>
             <p>{product.weight ? `${product.weight} g` : "-"}</p>
           </div>
           <div>
-            <span className="font-semibold">Dimensions</span>
+            <span className="font-semibold">ขนาด</span>
             <p>
               {product.length && product.width && product.height
                 ? `${product.length}L x ${product.width}W x ${product.height}H`
@@ -85,31 +85,27 @@ const ShippingInfoTab = () => {
         <div className="flex items-start gap-x-2">
           <FastDelivery />
           <div>
-            <span className="font-semibold">Fast delivery</span>
+            <span className="font-semibold">จัดส่งทั่วไทย</span>
             <p className="max-w-sm">
-              Your package will arrive in 3-5 business days at your pick up
-              location or in the comfort of your home.
+              ระยะเวลาและค่าจัดส่งจะแสดงตามที่ร้านกำหนดในขั้นตอนชำระเงิน
             </p>
           </div>
         </div>
         <div className="flex items-start gap-x-2">
           <Refresh />
           <div>
-            <span className="font-semibold">Simple exchanges</span>
+            <span className="font-semibold">สินค้ามีปัญหา</span>
             <p className="max-w-sm">
-              Is the fit not quite right? No worries - we&apos;ll exchange your
-              product for a new one.
+              หากได้รับสินค้าไม่ตรงคำสั่งซื้อ กรุณาติดต่อร้านพร้อมรูปสินค้าและเลขคำสั่งซื้อ
             </p>
           </div>
         </div>
         <div className="flex items-start gap-x-2">
           <Back />
           <div>
-            <span className="font-semibold">Easy returns</span>
+            <span className="font-semibold">การเปลี่ยนหรือคืนสินค้า</span>
             <p className="max-w-sm">
-              Just return your product and we&apos;ll refund your money. No
-              questions asked – we&apos;ll do our best to make sure your return
-              is hassle-free.
+              เงื่อนไขขึ้นอยู่กับนโยบายของร้าน กรุณาติดต่อร้านก่อนส่งสินค้ากลับทุกครั้ง
             </p>
           </div>
         </div>

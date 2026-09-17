@@ -141,3 +141,54 @@ html[data-theme="studio"] {
 button, .btn, input, select, textarea {
   border-radius: var(--brand-radius);
 }
+
+.brand-story-surface {
+  background:
+    radial-gradient(circle at 8% 16%, color-mix(in srgb, var(--brand-accent) 10%, transparent), transparent 30%),
+    color-mix(in srgb, var(--brand-paper) 91%, var(--brand-ink));
+}
+
+.brand-story-image {
+  border-radius: var(--brand-radius-lg);
+  box-shadow: 0 1.5rem 4rem color-mix(in srgb, var(--brand-ink) 15%, transparent);
+}
+
+.brand-closing-panel {
+  border: var(--brand-card-border);
+  border-radius: calc(var(--brand-radius-lg) * 1.4);
+  background:
+    radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--brand-accent) 16%, transparent), transparent 36%),
+    var(--brand-card-surface);
+}
+
+.brand-text-link {
+  border-bottom: 1px solid currentColor;
+  padding-bottom: .2rem;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+.brand-text-link:hover {
+  color: var(--brand-primary);
+}
+
+.brand-primary-link {
+  border-radius: var(--brand-radius);
+  background: var(--brand-primary);
+  color: var(--brand-on-primary);
+  transition: transform 180ms ease, background-color 180ms ease;
+}
+
+.brand-primary-link:hover {
+  background: color-mix(in srgb, var(--brand-primary) 88%, black);
+  transform: translateY(-2px);
+}
+
+.brand-primary-link:active {
+  transform: translateY(0);
+}
+
+.brand-primary-link:focus-visible,
+.brand-text-link:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 4px;
+}

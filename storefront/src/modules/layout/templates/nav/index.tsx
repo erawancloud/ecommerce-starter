@@ -9,13 +9,17 @@ import CartButton from "@modules/layout/components/cart-button"
 import SideMenu from "@modules/layout/components/side-menu"
 import Announcement from "@modules/layout/components/announcement"
 import BrandMark from "@modules/layout/components/brand-mark"
+import { getBrand } from "@lib/brand"
 
 export default async function Nav() {
-  const [regions, locales, currentLocale] = await Promise.all([
+  const [regions, locales, currentLocale, brand] = await Promise.all([
     listRegions().then((regions: StoreRegion[]) => regions),
     listLocales(),
     getLocale(),
+    getBrand(),
   ])
+  const isKruaKhunYaiDemo =
+    (brand.shop_name.th || brand.shop_name.en).trim() === "ครัวคุณยาย"
 
   return (
     <div className="sticky top-0 inset-x-0 z-50 group">
@@ -25,10 +29,24 @@ export default async function Nav() {
         style={{ background: "var(--brand-paper)" }}
       >
         <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
-          <div className="flex-1 basis-0 h-full flex items-center">
+          <div className="flex-1 basis-0 h-full flex items-center gap-7">
             <div className="h-full">
               <SideMenu regions={regions} locales={locales} currentLocale={currentLocale} />
             </div>
+            <LocalizedClientLink
+              href="/store"
+              className="hidden text-ui-fg-subtle transition-colors hover:text-ui-fg-base small:block"
+            >
+              สินค้า
+            </LocalizedClientLink>
+            {isKruaKhunYaiDemo ? (
+              <LocalizedClientLink
+                href="/#story"
+                className="hidden text-ui-fg-subtle transition-colors hover:text-ui-fg-base medium:block"
+              >
+                เรื่องของเรา
+              </LocalizedClientLink>
+            ) : null}
           </div>
 
           <div className="flex items-center h-full">

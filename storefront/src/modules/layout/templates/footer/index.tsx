@@ -71,8 +71,18 @@ export default async function Footer() {
             </div>
           ) : null}
 
-          <div className="flex flex-col gap-2">
-            <span className="txt-small-plus text-ui-fg-base">ติดต่อร้าน</span>
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2">
+              <span className="txt-small-plus text-ui-fg-base">ช่วยเหลือ</span>
+              <ul className="text-ui-fg-subtle flex flex-col gap-2 text-sm">
+                <li><LocalizedClientLink className="hover:text-ui-fg-base" href="/store">สินค้าทั้งหมด</LocalizedClientLink></li>
+                <li><LocalizedClientLink className="hover:text-ui-fg-base" href="/account/orders">ติดตามคำสั่งซื้อ</LocalizedClientLink></li>
+                <li><LocalizedClientLink className="hover:text-ui-fg-base" href="/cart">ตะกร้าของฉัน</LocalizedClientLink></li>
+              </ul>
+            </div>
+            {(lineHref || c.phone || c.email || socials.length) ? (
+            <div className="flex flex-col gap-2">
+              <span className="txt-small-plus text-ui-fg-base">ติดต่อร้าน</span>
             <ul className="text-ui-fg-subtle flex flex-col gap-2 text-sm">
               {lineHref ? (
                 <li>
@@ -108,6 +118,8 @@ export default async function Footer() {
                 </li>
               ))}
             </ul>
+            </div>
+            ) : null}
           </div>
         </div>
 

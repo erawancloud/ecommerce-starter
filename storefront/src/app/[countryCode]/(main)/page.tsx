@@ -1,5 +1,6 @@
 import FeaturedProducts from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
+import DemoEditorial from "@modules/home/components/demo-editorial"
 import { listCollections } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
 
@@ -38,6 +39,7 @@ export default async function Home(props: {
           </ul>
         </div>
       ) : null}
+      <DemoEditorial />
     </>
   )
 }
