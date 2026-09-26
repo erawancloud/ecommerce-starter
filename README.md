@@ -9,6 +9,8 @@
 PromptPay rather than by a gateway, whose whole look and marketing tags are
 editable by the shop owner from the admin dashboard.
 
+Category: ecommerce
+
 > **สถานะ: ยังไม่ได้ walk บนโปรดักชัน (2026-09-14).**
 > ทุกอย่างในนี้ถูกสร้าง รัน และวัดจริงบนเครื่อง (ดู *What was measured*) แต่ยังไม่ได้
 > ขึ้นระบบจริงสักครั้ง — ฉะนั้นยังไม่ขึ้นชั้นวางบนหน้าแรก และ README ยังไม่มีบรรทัด
